@@ -4,115 +4,99 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>INTERAC LESSON INFO FEEDBACK TRACKER</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Toastify CDN -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     :root {
-      --sky-top: #87CEEB;
-      --sky-bottom: #E0F7FA;
-      --pastel-pink: #FFB6C1;
-      --light-pink: #FFC0CB;
-      --black: #000000;
+      --primary-blue: #1a73e8;
+      --interac-gold: #fbbc04;
+      --interac-gold-dark: #d1a302;
+      --bg-color: #f0f2f5;
+      --success-green: #28a745;
+      --gray-muted: #555; 
+      --line-color: #e0e0e0;
     }
-
-    body { 
-      font-family: Helvetica, Arial, sans-serif; 
-      background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
-      min-height: 100vh;
-      margin: 0; padding: 40px 20px; 
-      overflow-x: hidden; position: relative;
-    }
-
-    /* Cloud Background */
-    .cloud-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-    .cloud { position: absolute; background-size: contain; background-repeat: no-repeat; animation: float 8s ease-in-out infinite; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-    
-    .c1 { background-image: url('images/clouds1.png'); top: 5%; left: 5%; width: 250px; height: 150px; }
-    .c2 { background-image: url('images/clouds2.png'); top: 10%; left: 75%; width: 200px; height: 120px; }
-    .c3 { background-image: url('images/clouds3.png'); top: 30%; left: 20%; width: 280px; height: 160px; }
-    .c4 { background-image: url('images/clouds4.png'); top: 50%; left: 60%; width: 220px; height: 130px; }
-    .c5 { background-image: url('images/clouds5.png'); top: 65%; left: 10%; width: 180px; height: 110px; }
-    .c6 { background-image: url('images/clouds6.png'); top: 80%; left: 80%; width: 260px; height: 150px; }
-    .c7 { background-image: url('images/clouds7.png'); top: 20%; left: 40%; width: 150px; height: 90px; }
-    .c8 { background-image: url('images/clouds8.png'); top: 85%; left: 35%; width: 300px; height: 180px; }
-
-    /* UI Elements */
-    .container { max-width: 900px; margin: auto; text-align: center; position: relative; z-index: 2; }
-    .anya-dance { position: fixed; bottom: 0; right: 0px; width: 200px; z-index: 1000; pointer-events: none; }
-    .header-img { width: 100%; max-width: 400px; margin-bottom: 20px; }
-    h2 { color: var(--light-pink); text-transform: uppercase; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; margin: 10px 0; }
-    
-    /* Search & Table Styles */
-    .search-area { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-    input { padding: 12px; border: 2px solid var(--black); border-radius: 8px; width: 300px; }
-    button { padding: 10px 20px; background-color: var(--pastel-pink); border: 2px solid var(--black); border-radius: 8px; font-weight: bold; cursor: pointer; }
-    
-    table { width: 100%; border-collapse: collapse; background: white; border: 2px solid var(--black); }
-    th { background-color: var(--pastel-pink); padding: 10px; border: 1px solid var(--black); text-transform: uppercase; font-size: 0.8em; }
-    td { padding: 10px; border: 1px solid #ddd; text-align: center; }
-    
-    /* Animations */
-    @keyframes flyLeftToRight { 0% { left: -150px; } 100% { left: 105vw; } }
-    @keyframes flyRightToLeft { 0% { left: 105vw; } 100% { left: -150px; } }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
-    .flying-img { position: absolute; width: 100px; z-index: 1; pointer-events: none; animation: flyLeftToRight 15s linear infinite, bounce 2s ease-in-out infinite; }
-    .fly-reverse { animation: flyRightToLeft 15s linear infinite, bounce 2s ease-in-out infinite; }
+    html, body { height: 100%; margin: 0; padding: 0; background-color: var(--bg-color); font-family: 'Inter', sans-serif; }
+    .container { width: 100%; min-height: 100vh; background: white; display: flex; flex-direction: column; box-sizing: border-box; }
+    .header-section { padding: 20px; background: white; border-bottom: 1px solid #eee; text-align: center; }
+    .header-section h2 { color: var(--primary-blue); margin: 0 0 5px 0; font-size: 24px; font-weight: 800; }
+    .date-note { font-size: 13px; color: #666; margin-bottom: 20px; font-weight: 500; }
+    .search-area { display: flex; justify-content: center; gap: 10px; padding-bottom: 10px; }
+    input[type="text"] { padding: 12px 16px; width: 100%; max-width: 450px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; }
+    button { padding: 0 30px; background-color: var(--primary-blue); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .table-wrapper { flex-grow: 1; overflow: auto; position: relative; }
+    table { width: 100%; border-collapse: collapse; min-width: 1500px; }
+    th { background-color: var(--interac-gold); padding: 12px 10px; font-weight: 800; text-transform: uppercase; color: #000; border-bottom: 2px solid var(--interac-gold-dark); border-right: 1px solid var(--interac-gold-dark); position: sticky; top: 0; z-index: 10; font-size: 11px; letter-spacing: 0.05em; }
+    td { padding: 10px 8px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid var(--line-color); text-align: center; font-size: 12.5px; }
+    .bold-col { font-weight: 700; color: #000; }
+    .finished-row { background-color: #f2f2f2 !important; color: var(--gray-muted); }
+    .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .badge-upcoming { background: #e6ffed; color: var(--success-green); border: 1px solid #b7eb8f; }
+    .badge-finished { background: #e0e0e0; color: #444; border: 1px solid #ccc; }
+    .btn-link { background: var(--primary-blue); color: white; text-decoration: none; padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; text-transform: uppercase; cursor: pointer; border:none; }
+    .raw-link { color: var(--primary-blue); text-decoration: underline; font-size: 10px; }
   </style>
 </head>
 <body>
-
-  <div class="cloud-layer">
-    <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div>
-    <div class="cloud c5"></div><div class="cloud c6"></div><div class="cloud c7"></div><div class="cloud c8"></div>
-  </div>
-
-  <img src="images/Anya_dance.gif" class="anya-dance" alt="Anya dancing">
-  <img src="images/57.png" class="flying-img" style="top: 10%; animation-duration: 15s;">
-  <img src="images/58.png" class="flying-img" style="top: 25%; animation-duration: 12s; animation-delay: -4s;">
-  <img src="images/59.png" class="flying-img fly-reverse" style="top: 40%; animation-duration: 18s; animation-delay: -8s;">
-  <img src="images/60.png" class="flying-img fly-reverse" style="top: 55%; animation-duration: 14s; animation-delay: -2s;">
-  <img src="images/61.png" class="flying-img fly-reverse" style="top: 70%; animation-duration: 16s; animation-delay: -6s;">
-
   <div class="container">
-    <img src="images/31.png" class="header-img">
-    <h2>INTERAC LESSON INFO FEEDBACK TRACKER</h2>
-    <div class="search-area">
-      <input type="text" id="q" placeholder="Enter Teacher Name">
-      <button onclick="doSearch()">Search</button>
+    <div class="header-section">
+      <h2>INTERAC LESSON INFO FEEDBACK TRACKER</h2>
+      <div class="date-note" id="date-range-note">Displaying July 2026 Lessons</div>
+      <div class="search-area">
+        <input type="text" id="q" placeholder="Enter Teacher Name" onkeypress="if(event.key==='Enter') doSearch()">
+        <button id="btn" onclick="doSearch()">Search</button>
+      </div>
     </div>
-    <div id="resultsTable"></div>
+    <div id="results-container" class="table-wrapper"><div id="results"></div></div>
   </div>
 
   <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnHpSG4WJ-pwXfWATtrt42uCBdDGXaM9OAlZFQDAoLuakOtu-AJoFcv13W627onXf-Cw/exec";
+
+    function showToast(message, color = "#1a73e8") {
+      Toastify({ text: message, duration: 3000, gravity: "top", position: "right", style: { background: color, borderRadius: "8px" } }).showToast();
+    }
+
     async function doSearch() {
-      const teacherName = document.getElementById('q').value;
-      const tableDiv = document.getElementById('resultsTable');
+      const q = document.getElementById('q').value.trim();
+      if(!q) { showToast("Enter a teacher name", "#d93025"); return; }
       
-      // Web App URL connected
-      const url = 'https://script.google.com/macros/s/AKfycbwnHpSG4WJ-pwXfWATtrt42uCBdDGXaM9OAlZFQDAoLuakOtu-AJoFcv13W627onXf-Cw/exec' + '?name=' + encodeURIComponent(teacherName);
-      
-      tableDiv.innerHTML = "Searching...";
-      
+      Swal.fire({ title: 'Searching...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
       try {
-        const response = await fetch(url);
+        const response = await fetch(`${WEB_APP_URL}?q=${encodeURIComponent(q)}`);
         const data = await response.json();
-        
-        if (data.length === 0) {
-          tableDiv.innerHTML = "<p>No exact match found. Please check spelling.</p>";
+        if(!data.rows || data.rows.length === 0) {
+          Swal.close();
+          showToast("No lessons found", "#d93025");
+          document.getElementById('results').innerHTML = "";
           return;
         }
+        Swal.close();
+        showToast(`Found ${data.rows.length} lessons`);
+        render(data.rows);
+      } catch (err) { Swal.close(); showToast("Connection Error", "#d93025"); }
+    }
 
-        let html = `<table><tr><th>Date</th><th>Start</th><th>End</th><th>Teacher</th><th>Student</th><th>Material</th></tr>`;
-        data.forEach(row => {
-          html += `<tr>
-            <td>${row.date}</td><td>${row.start}</td><td>${row.end}</td>
-            <td>${row.teacher}</td><td>${row.student}</td><td>${row.material}</td>
-          </tr>`;
+    function render(rows) {
+      const headers = ["Status", "Date", "Access", "Start", "End", "Material", "Mat URL", "Meeting URL", "Teacher", "Student", "FB Form", "Type", "Area", "School", "Grade", "Class", "Period"];
+      let html = '<table><thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+      rows.forEach(r => {
+        html += `<tr><td><span class="badge badge-upcoming">JULY</span></td>`;
+        r.forEach((cell, i) => {
+          let content = cell || "-";
+          if (i === 9) { // FB Form
+             html += `<td><a class="btn-link" href="${content}" target="_blank">Open</a></td>`;
+          } else {
+             html += `<td>${content}</td>`;
+          }
         });
-        html += `</table>`;
-        tableDiv.innerHTML = html;
-      } catch (error) {
-        tableDiv.innerHTML = "Error loading data. Please check your connection.";
-      }
+        html += '</tr>';
+      });
+      document.getElementById('results').innerHTML = html + '</tbody></table>';
     }
   </script>
 </body>
