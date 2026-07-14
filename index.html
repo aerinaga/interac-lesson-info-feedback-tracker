@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>INTERAC LESSON INFO FEEDBACK TRACKER</title>
+  <!-- Toastify CDN -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  
   <style>
     :root {
       --sky-top: #87CEEB;
@@ -87,14 +91,26 @@
       const teacherName = document.getElementById('q').value;
       const tableDiv = document.getElementById('resultsTable');
 
-      // Web App URL connected
+      if (!teacherName) {
+        Toastify({ text: "Please enter a name!", backgroundColor: "#FFB6C1" }).showToast();
+        return;
+      }
+
+      Toastify({ text: "Searching...", backgroundColor: "#87CEEB" }).showToast();
+      
       const url = 'https://script.google.com/macros/s/AKfycbwnHpSG4WJ-pwXfWATtrt42uCBdDGXaM9OAlZFQDAoLuakOtu-AJoFcv13W627onXf-Cw/exec' + '?name=' + encodeURIComponent(teacherName)
 
-      tableDiv.innerHTML = "Searching...";
+      tableDiv.innerHTML = "Loading...";
 
-@@ -116,4 +116,4 @@
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        // ... (rest of your existing render logic)
+        Toastify({ text: "Search complete", backgroundColor: "#98FB98" }).showToast();
+      } catch (e) {
+        Toastify({ text: "Error fetching data", backgroundColor: "#FF6347" }).showToast();
+      }
     }
   </script>
 </body>
-</html>
 </html>
