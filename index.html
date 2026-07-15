@@ -62,7 +62,7 @@
       const q = document.getElementById('q').value;
       const tableDiv = document.getElementById('resultsTable');
       if (!q) { Toastify({ text: "Please enter a name!", backgroundColor: "#FFB6C1" }).showToast(); return; }
-      const url = 'https://script.google.com/macros/s/AKfycby5wCWuRe-4B5nNRxuXSRatGtEbV_s-hnzEVzPHgLYvHRNw52tSDe9BXaQvfNPMdKzFIQ/exec?q=' + encodeURIComponent(q);
+      const url = 'https://script.google.com/macros/s/AKfycbxGxWP3L0gEJtEt6q3uKGjLZ_ZvlEi1d2FHGplZhXUEhY8F0eU0Mc3RWpMLHfojbH6WpQ/exec?q=' + encodeURIComponent(q);
       tableDiv.innerHTML = "Loading...";
       try {
         const res = await fetch(url);
