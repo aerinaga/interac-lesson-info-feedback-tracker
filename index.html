@@ -27,10 +27,12 @@
     .search-area { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
     input { padding: 10px; border: 2px solid var(--black); border-radius: 8px; width: 250px; }
     button { padding: 10px 20px; background-color: var(--pastel-pink); border: 2px solid var(--black); border-radius: 8px; font-weight: bold; cursor: pointer; }
-    /* Compact Table */
-    table { width: 100%; border-collapse: collapse; background: white; border: 2px solid var(--black); font-size: 0.9em; }
-    th { background-color: var(--pastel-pink); padding: 8px; border: 1px solid var(--black); text-transform: uppercase; }
-    td { padding: 8px; border: 1px solid #ddd; text-align: center; }
+    
+    /* Transparent Compact Table */
+    table { width: 100%; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.7); border: 2px solid var(--black); font-size: 0.9em; backdrop-filter: blur(4px); }
+    th { background-color: rgba(255, 182, 193, 0.8); padding: 8px; border: 1px solid var(--black); text-transform: uppercase; }
+    td { padding: 8px; border: 1px solid rgba(0, 0, 0, 0.1); text-align: center; }
+    
     @keyframes flyLeftToRight { 0% { left: -150px; } 100% { left: 105vw; } }
     @keyframes flyRightToLeft { 0% { left: 105vw; } 100% { left: -150px; } }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
