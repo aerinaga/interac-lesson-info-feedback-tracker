@@ -25,7 +25,9 @@
     .header-img { width: 100%; max-width: 350px; margin-bottom: 10px; }
     h2 { color: var(--light-pink); text-transform: uppercase; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; margin: 10px 0; }
     .search-area { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-    input { padding: 10px; border: 2px solid var(--black); border-radius: 8px; width: 250px; }
+    input, select { padding: 10px; border: 2px solid var(--black); border-radius: 8px; }
+    input { width: 250px; }
+    select { width: 150px; background-color: white; cursor: pointer; }
     button { padding: 10px 20px; background-color: var(--pastel-pink); border: 2px solid var(--black); border-radius: 8px; font-weight: bold; cursor: pointer; }
     table { width: 100%; border-collapse: collapse; background-color: transparent; border: 2px solid var(--black); font-size: 0.9em; }
     th { background-color: rgba(255, 182, 193, 0.8); padding: 8px; border: 1px solid var(--black); text-transform: uppercase; }
@@ -51,10 +53,15 @@
     <div class="search-area">
       <input type="text" id="q" placeholder="Enter Teacher Name">
       <button onclick="doSearch()">Search</button>
+      <select id="dateFilter" onchange="filterTableByDate()">
+        <option value="">All Dates</option>
+      </select>
     </div>
     <div id="resultsTable"></div>
   </div>
   <script>
+    let allData = []; // Store raw search results
+
     async function doSearch() {
       const q = document.getElementById('q').value;
       const tableDiv = document.getElementById('resultsTable');
@@ -65,15 +72,39 @@
         const res = await fetch(url);
         const data = await res.json();
         if (!data.rows || data.rows.length === 0) { tableDiv.innerHTML = "No results found."; return; }
-        let html = '<table><thead><tr><th>Date</th><th>Access</th><th>Start</th><th>End</th><th>Type</th><th>Area</th><th>Grade</th><th>Class</th><th>Period</th><th>Student</th><th>Teacher</th><th>Material</th><th>FB Form</th></tr></thead><tbody>';
-        data.rows.forEach(r => {
-          const rawFb = r[12];
-          const isNoFeedback = !rawFb || String(rawFb).toLowerCase().trim() === "no feedback" || String(rawFb).toLowerCase().trim() === "#n/a";
-          const fbLink = isNoFeedback ? "N/A" : `<a href="${rawFb}" target="_blank">Open</a>`;
-          html += `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td>${r[8]}</td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td><td>${fbLink}</td></tr>`;
-        });
-        tableDiv.innerHTML = html + '</tbody></table>';
+        
+        allData = data.rows; // Save data
+        updateDateDropdown(); // Populate dropdown
+        renderTable(allData); // Show all initially
       } catch (e) { Toastify({ text: "Error", backgroundColor: "#FF6347" }).showToast(); }
+    }
+
+    function updateDateDropdown() {
+      const select = document.getElementById('dateFilter');
+      select.innerHTML = '<option value="">All Dates</option>';
+      const dates = [...new Set(allData.map(r => r[0]))]; // Get unique dates
+      dates.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d; opt.textContent = d;
+        select.appendChild(opt);
+      });
+    }
+
+    function filterTableByDate() {
+      const selectedDate = document.getElementById('dateFilter').value;
+      const filtered = selectedDate ? allData.filter(r => r[0] === selectedDate) : allData;
+      renderTable(filtered);
+    }
+
+    function renderTable(rows) {
+      let html = '<table><thead><tr><th>Date</th><th>Access</th><th>Start</th><th>End</th><th>Type</th><th>Area</th><th>Grade</th><th>Class</th><th>Period</th><th>Student</th><th>Teacher</th><th>Material</th><th>FB Form</th></tr></thead><tbody>';
+      rows.forEach(r => {
+        const rawFb = r[12];
+        const isNoFeedback = !rawFb || String(rawFb).toLowerCase().trim() === "no feedback" || String(rawFb).toLowerCase().trim() === "#n/a";
+        const fbLink = isNoFeedback ? "N/A" : `<a href="${rawFb}" target="_blank">Open</a>`;
+        html += `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td>${r[8]}</td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td><td>${fbLink}</td></tr>`;
+      });
+      document.getElementById('resultsTable').innerHTML = html + '</tbody></table>';
     }
   </script>
 </body>
