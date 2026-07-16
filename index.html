@@ -24,14 +24,25 @@
     .anya-dance { position: fixed; bottom: 0; right: 0px; width: 200px; z-index: 1000; pointer-events: none; }
     .header-img { width: 100%; max-width: 350px; margin-bottom: 10px; }
     h2 { color: var(--light-pink); text-transform: uppercase; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; margin: 10px 0; }
-    .search-area { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    
+    .search-area { 
+      display: flex; 
+      justify-content: flex-start; 
+      gap: 10px; 
+      margin-bottom: 20px; 
+      width: 1100px; 
+      margin-left: auto; 
+      margin-right: auto;
+    }
     input, select { padding: 10px; border: 2px solid var(--black); border-radius: 8px; }
     input { width: 250px; }
     select { width: 150px; background-color: white; cursor: pointer; }
     button { padding: 10px 20px; background-color: var(--pastel-pink); border: 2px solid var(--black); border-radius: 8px; font-weight: bold; cursor: pointer; }
+    
     table { width: 100%; border-collapse: collapse; background-color: transparent; border: 2px solid var(--black); font-size: 0.9em; }
     th { background-color: rgba(255, 182, 193, 0.8); padding: 8px; border: 1px solid var(--black); text-transform: uppercase; }
     td { padding: 8px; border: 1px solid rgba(0, 0, 0, 0.2); text-align: center; background-color: rgba(255, 255, 255, 0.5); }
+    
     @keyframes flyLeftToRight { 0% { left: -150px; } 100% { left: 105vw; } }
     @keyframes flyRightToLeft { 0% { left: 105vw; } 100% { left: -150px; } }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
@@ -47,20 +58,23 @@
   <img src="images/59.png" class="flying-img fly-reverse" style="top: 40%; animation-duration: 18s; animation-delay: -8s;">
   <img src="images/60.png" class="flying-img fly-reverse" style="top: 55%; animation-duration: 14s; animation-delay: -2s;">
   <img src="images/61.png" class="flying-img fly-reverse" style="top: 70%; animation-duration: 16s; animation-delay: -6s;">
+  
   <div class="container">
     <img src="images/31.png" class="header-img">
     <h2>INTERAC LESSON INFO FEEDBACK TRACKER</h2>
     <div class="search-area">
       <input type="text" id="q" placeholder="Enter Teacher Name">
       <button onclick="doSearch()">Search</button>
-      <select id="dateFilter" onchange="filterTableByDate()">
+      <!-- Change the pixel value in margin-left to nudge the dropdown until it aligns with your Material column -->
+      <select id="dateFilter" onchange="filterTableByDate()" style="margin-left: 370px;">
         <option value="">All Dates</option>
       </select>
     </div>
     <div id="resultsTable"></div>
   </div>
+
   <script>
-    let allData = []; // Store raw search results
+    let allData = [];
 
     async function doSearch() {
       const q = document.getElementById('q').value;
@@ -72,17 +86,16 @@
         const res = await fetch(url);
         const data = await res.json();
         if (!data.rows || data.rows.length === 0) { tableDiv.innerHTML = "No results found."; return; }
-        
-        allData = data.rows; // Save data
-        updateDateDropdown(); // Populate dropdown
-        renderTable(allData); // Show all initially
+        allData = data.rows;
+        updateDateDropdown();
+        renderTable(allData);
       } catch (e) { Toastify({ text: "Error", backgroundColor: "#FF6347" }).showToast(); }
     }
 
     function updateDateDropdown() {
       const select = document.getElementById('dateFilter');
       select.innerHTML = '<option value="">All Dates</option>';
-      const dates = [...new Set(allData.map(r => r[0]))]; // Get unique dates
+      const dates = [...new Set(allData.map(r => r[0]))];
       dates.forEach(d => {
         const opt = document.createElement('option');
         opt.value = d; opt.textContent = d;
