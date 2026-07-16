@@ -25,15 +25,18 @@
     .header-img { width: 100%; max-width: 350px; margin-bottom: 10px; }
     h2 { color: var(--light-pink); text-transform: uppercase; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; margin: 10px 0; }
     
-    .search-area { 
+    .search-container { 
       display: flex; 
-      justify-content: flex-start; 
-      gap: 10px; 
+      justify-content: center; 
       margin-bottom: 20px; 
       width: 1100px; 
       margin-left: auto; 
       margin-right: auto;
+      align-items: center;
     }
+    .search-controls { display: flex; gap: 10px; }
+    .filter-controls { margin-left: 100px; } /* Nudge this to align over 'Material' column */
+
     input, select { padding: 10px; border: 2px solid var(--black); border-radius: 8px; }
     input { width: 250px; }
     select { width: 150px; background-color: white; cursor: pointer; }
@@ -62,20 +65,24 @@
   <div class="container">
     <img src="images/31.png" class="header-img">
     <h2>INTERAC LESSON INFO FEEDBACK TRACKER</h2>
-    <div class="search-area">
-      <input type="text" id="q" placeholder="Enter Teacher Name">
-      <button onclick="doSearch()">Search</button>
-      <!-- Change the pixel value in margin-left to nudge the dropdown until it aligns with your Material column -->
-      <select id="dateFilter" onchange="filterTableByDate()" style="margin-left: 370px;">
-        <option value="">All Dates</option>
-      </select>
+    
+    <div class="search-container">
+        <div class="search-controls">
+          <input type="text" id="q" placeholder="Enter Teacher Name">
+          <button onclick="doSearch()">Search</button>
+        </div>
+        <div class="filter-controls">
+          <select id="dateFilter" onchange="filterTableByDate()">
+            <option value="">All Dates</option>
+          </select>
+        </div>
     </div>
+    
     <div id="resultsTable"></div>
   </div>
 
   <script>
     let allData = [];
-
     async function doSearch() {
       const q = document.getElementById('q').value;
       const tableDiv = document.getElementById('resultsTable');
